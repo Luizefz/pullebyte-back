@@ -1,15 +1,15 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 import httpx
 import re
 import json
 
 app = FastAPI()
 
-# Configuração do CORS para permitir solicitações de qualquer origem
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Altere isso para a origem específica do seu aplicativo Flutter, se possível
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
@@ -43,3 +43,7 @@ async def fetch_match_data():
 async def get_api_data():
     data = await fetch_match_data()
     return data
+
+@app.get("/")
+async def root():
+    return RedirectResponse(url="/docs")
