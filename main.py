@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 import httpx
@@ -42,6 +42,18 @@ async def fetch_match_data():
 async def get_api_data():
     data = await fetch_match_data()
     return data
+
+@app.get("/get_escudo_image/{team_id}")
+async def get_escudo_image(team_id):
+    async with httpx.AsyncClient() as client:
+        url = f"https://arquivos.admsuperplacar.com.br/img_{team_id}_48.png"
+        try:
+            response = await client.get(url)
+            response.raise_for_status()
+        except httpx.RequestError as e:
+            return {"error": f"Erro ao buscar a imagem: {e}"}
+    
+    return Response(content=response.content, media_type="image/png")
 
 @app.get("/")
 async def root():
