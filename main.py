@@ -34,8 +34,7 @@ async def fetch_match_data():
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             if response.status_code == 200:
-                decoded_data = json.loads(response.text)
-                matches = decoded_data['campeonatos']
+                matches = json.loads(response.text)
                 return matches
     return None
 
